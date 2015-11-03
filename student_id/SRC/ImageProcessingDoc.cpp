@@ -162,7 +162,7 @@ void CImageProcessingDoc::CalculateHistogram()
 
 				m_histogramRed[color.rgbRed] += 1;
 				m_histogramGreen[color.rgbGreen] += 1;
-				m_histogramGreen[color.rgbBlue] += 1;
+				m_histogramBlue[color.rgbBlue] += 1;
 				m_histogramGray[(color.rgbRed + color.rgbGreen + color.rgbBlue) / 3] += 1;
 			}
 		}
@@ -176,6 +176,7 @@ void CImageProcessingDoc::CalculateHistogram()
 			m_histogramMax = max(m_histogramMax, m_histogramBlue[i] );
 			m_histogramMax = max(m_histogramMax, m_histogramGray[i] );
 		}
+
 		//////////////////////////////////////////////////////////////
 	}
 }
@@ -673,7 +674,7 @@ void CImageProcessingDoc::OnProcessContrastStretch()
 			DWORD height = m_pImage->GetHeight();
 			RGBQUAD color;
 			RGBQUAD newcolor;
-
+			
 			BYTE LUT[256];
 
 			// initialize thresholds
@@ -683,22 +684,72 @@ void CImageProcessingDoc::OnProcessContrastStretch()
 
 			// compute thresholds
 			if (nStretchType == 0) { // Auto
-
+				for (int i = 0; i < 256; i++){
+					if (m_histogramGray[i]!=0){
+						nLowTherhs = i;
+						break;
+					}					
+				}
+				for (int i = 255; i > -1; i--){
+					if (m_histogramGray[i] != 0){
+						nHighThresh = i;
+						break;
+					}
+				}
+				
 			} else if (nStretchType == 1) { // Ends-In
 
+				for (int i = 0; i < 256; i++){
+					if (m_histogramGray[i] >= fLow){
+						nLowTherhs = i;
+						break;
+					}
+				}
+				for (int i = 255; i > -1; i--){
+					if (m_histogramGray[i] <= fHigh){
+						nHighThresh = i;
+						break;
+					}
+				}
+				nLowTherhs = fLow;
+				nHighThresh = fHigh;
 			}
 
+			if (nLowTherhs < 0){
+				nLowTherhs = 0;
+			}
+
+			if (nLowTherhs > 255){
+				nLowTherhs = 255;
+			}
+			if (nHighThresh < 0){
+				nHighThresh = 0;
+			}if (nHighThresh > 255){
+				nHighThresh = 255;
+			}
 
 			// compute LUT
-
+			for (int i = 0; i < 255; i++){
+				if (i <= nLowTherhs){
+					LUT[i] = 0;
+				}
+				else if (nLowTherhs <= i  && i <= nHighThresh){
+					LUT[i] = 255 * (i - nLowTherhs) / (nHighThresh - nLowTherhs);
+				}
+				else if(nHighThresh <= i){
+					LUT[i] = 255;
+				}
+				
+			}
 
 			// trnasfer image
 			for (DWORD y = 0; y < height; y++) {
 				for (DWORD x = 0; x < width; x++) {
 					color = m_pImage->GetPixelColor(x, y);
-
-					// using LUT
-
+					newcolor.rgbBlue = LUT[color.rgbBlue];
+					newcolor.rgbGreen = LUT[color.rgbGreen];
+					newcolor.rgbRed = LUT[color.rgbRed];
+					
 					m_pImage->SetPixelColor(x, y, newcolor);
 				}
 			}
@@ -719,19 +770,19 @@ void CImageProcessingDoc::OnProcessEqualization()
 		DWORD height = m_pImage->GetHeight();
 		RGBQUAD color;	// Save the current color value
 		RGBQUAD newcolor;	// After the conversion, save the color value
-
 		//(1) Histogram has already been generated histogram(Omission) 
 		//(2) Create a cumulative histogram
 		DWORD sum = 0;
 		float scale_factor = 255.0 / (width*height);
-		DWORD sum_hist[256]; // a cumulative histogram
+		DWORD sum_hist[256]; // a normalized histogram
 
 		for(int i=0; i<256 ; i++)
 		{
-		// (Coding)
+			sum += m_histogramGray[i];
+			sum_hist[i] = sum;
 
 		}
-
+		
 
 		//(3) Calculating look-up table
 		BYTE LUT[256]; // look-up table
@@ -739,8 +790,7 @@ void CImageProcessingDoc::OnProcessEqualization()
 		for(int i=0; i<256 ; i++)
 		{
 		// (Coding)  
-
-
+			LUT[i] = sum_hist[i] * scale_factor;
 		}
 
 		// (4) Image Conversion
@@ -750,6 +800,21 @@ void CImageProcessingDoc::OnProcessEqualization()
 			{
 				color = m_pImage->GetPixelColor(x, y);
 				// (Coding)
+				int blue = LUT[color.rgbBlue];
+				int green = LUT[color.rgbGreen];
+				int red = LUT[color.rgbRed];
+
+				if (blue > 255){ blue = 255; }
+				if (green > 255){ green = 255; }
+				if (red > 255){ red = 255; }
+
+				if (blue < 0){ blue = 0; }
+				if (green< 0){ green = 0; }
+				if (red < 0){ red = 0; }
+
+				newcolor.rgbRed = (BYTE)red;
+				newcolor.rgbBlue = (BYTE)blue;
+				newcolor.rgbGreen = (BYTE)green;
 
 
 
