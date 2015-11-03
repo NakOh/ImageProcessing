@@ -43,9 +43,9 @@ CPointInt CStack::pop(){
 
 BOOL CStack::isFull(){
 	if(top < MAX_ELEMENT)
-		return TRUE;
-	else 
 		return FALSE;
+	else 
+		return TRUE;
 }
 
 BOOL CStack::isEmpty(){
@@ -442,10 +442,13 @@ CxImage* CCxImageARDoc::Labeling(CxImage* m_pImage){
 
 	RGBQUAD color, dstcolor;
 	int index = 1;
+
+	CStack stack;
+	CLabel clabel;
 	
 	for(int y = 0; y < height-1; y++){
 		for(int x = 0; x < width-1; x++){
-			/* you implement this */
+			
 		}
 	}
 
