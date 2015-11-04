@@ -9,6 +9,9 @@
 #define new DEBUG_NEW
 #endif
 
+CPointInt point;
+RGBQUAD newcolor;
+
 CPointInt::CPointInt(){
 	x = -1;
 	y = -1;
@@ -443,34 +446,67 @@ CxImage* CCxImageARDoc::Labeling(CxImage* m_pImage){
 	RGBQUAD color, dstcolor;
 	int index = 1;
 
-	CStack stack;
-	CLabel clabel;
+
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
+			color = src->GetPixelColor(x, y);
+			if (color.rgbRed == 0) {
+				dstcolor.rgbBlue = 255;
+				dstcolor.rgbGreen = 255;
+				dstcolor.rgbRed = 255;
+			}
+			else {
+				dstcolor.rgbBlue = 0;
+				dstcolor.rgbGreen = 0;
+				dstcolor.rgbRed = 0;
+			}
+			dst->SetPixelColor(x, y, dstcolor);
+		}
+	}
+
+	//candidate_marker = index;
 	
-	for(int y = 0; y < height-1; y++){
-		for(int x = 0; x < width-1; x++){
-			
-		}
-	}
-
-	candidate_marker = index;
-
-	for(int y = 0; y < height; y++){
-		for(int x = 0; x < width; x++){
+	for (int y = 0; y < height; y++) {
+		for (int x = 0; x < width; x++) {
 			color = dst->GetPixelColor(x, y);
-			dst->SetPixelColor(x, y, setColor(color.rgbRed));
-
+			if (color.rgbRed == 255 && color.rgbGreen == 255 && color.rgbBlue == 255) {
+				dst->SetPixelColor(x, y, setColor(index));
+				adjSearchStack(x, y, index, src, dst);
+				index++;
+			}
 		}
 	}
-
 	return dst;
 }
 
 void CCxImageARDoc::adjSearchStack(int x, int y, int index, CxImage* src, CxImage* dst){
-	int width = src->GetWidth();
-	int height = src->GetHeight();
-	
-	/* search the adj pixel using stack */
+	//int width = src->GetWidth();
+	//int height = src->GetHeight();	
 
+	//À§
+	newcolor = dst->GetPixelColor(x, y + 1);
+	if (newcolor.rgbBlue == 255 && newcolor.rgbGreen == 255 && newcolor.rgbRed == 255) {
+		dst->SetPixelColor(x, y + 1, setColor(index));
+		adjSearchStack(x, y + 1, index, src, dst);
+	}
+	//ÁÂ
+	newcolor = dst->GetPixelColor(x - 1, y);
+	if (newcolor.rgbBlue == 255 && newcolor.rgbGreen == 255 && newcolor.rgbRed == 255) {
+		dst->SetPixelColor(x - 1, y, setColor(index));
+		adjSearchStack(x - 1, y, index, src, dst);
+	}
+	//¿ì
+	newcolor = dst->GetPixelColor(x + 1, y);
+	if (newcolor.rgbBlue == 255 && newcolor.rgbGreen == 255 && newcolor.rgbRed == 255) {
+		dst->SetPixelColor(x + 1, y, setColor(index));
+		adjSearchStack(x + 1, y, index, src, dst);
+	}
+	//¾Æ·¡
+	newcolor = dst->GetPixelColor(x, y - 1);
+	if (newcolor.rgbBlue == 255 && newcolor.rgbGreen == 255 && newcolor.rgbRed == 255) {
+		dst->SetPixelColor(x, y - 1, setColor(index));
+		adjSearchStack(x, y - 1, index, src, dst);
+	}
 }
 
 
