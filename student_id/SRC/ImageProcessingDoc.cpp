@@ -326,6 +326,554 @@ void CImageProcessingDoc::OnProcessMosaic()
 			RGBQUAD color;
 			RGBQUAD newcolor;
 
+			CxImage* buffer = new CxImage;
+			buffer->Create(width, height, 24, CXIMAGE_FORMAT_BMP);
+
+			for (int x=0; x < width ; x++) {
+				for (int y=0; y < height ; y++) {
+					color = m_pImage->GetPixelColor(x, y);
+					newcolor.rgbRed =RGB2GRAY(color.rgbRed, color.rgbGreen, color.rgbBlue);
+					newcolor.rgbBlue = RGB2GRAY(color.rgbRed, color.rgbGreen, color.rgbBlue);
+					newcolor.rgbGreen = RGB2GRAY(color.rgbRed, color.rgbGreen, color.rgbBlue);
+					m_pImage->SetPixelColor(x, y, newcolor);
+				}
+			}
+
+
+			if (dwWindowSize == 0) {
+				float mask[3][3] = { { -1, -2, -1 },
+				{ 0, 0, 0 },
+				{ 1, 2, 1 } };
+
+				int sumRed = 0;
+				int sumGreen = 0;
+				int sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask[x - xsize][y - ysize];
+							}
+						}
+
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 0;
+							newcolor.rgbGreen = 0;
+							newcolor.rgbRed = 255;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+
+					}
+				}
+
+
+				float mask2[3][3] = { { -1, 0, 1 },
+				{ -2, 0, 2 },
+				{ -1, 0, 1 } };
+
+				sumRed = 0;
+				sumGreen = 0;
+				sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask2[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask2[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask2[x - xsize][y - ysize];
+							}
+						}
+
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 255;
+							newcolor.rgbGreen = 0;
+							newcolor.rgbRed = 0;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+					}
+				}
+
+				float mask3[3][3] = { { 0, 1, 2 },
+				{ -1, 0, 1 },
+				{ -2, -1, 0 } };
+
+				sumRed = 0;
+				sumGreen = 0;
+				sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask3[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask3[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask3[x - xsize][y - ysize];
+							}
+						}
+
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 0;
+							newcolor.rgbGreen = 255;
+							newcolor.rgbRed = 0;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+					}
+				}
+
+				float mask4[3][3] = { { -2, -1, 0 },
+				{ -1, 0, 1 },
+				{ 0, 1, 2 } };
+
+				sumRed = 0;
+				sumGreen = 0;
+				sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask4[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask4[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask4[x - xsize][y - ysize];
+							}
+						}
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 0;
+							newcolor.rgbGreen = 255;
+							newcolor.rgbRed = 255;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+					}
+				}
+
+
+			}
+			else if (dwWindowSize == 1) {
+				float mask[3][3] = { { -1, -2, -1 },
+				{ 0, 0, 0 },
+				{ 1, 2, 1 } };		
+
+				int sumRed = 0;
+				int sumGreen = 0;
+				int sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask[x - xsize][y - ysize];
+							}
+						}
+
+						sumBlue = sumBlue;
+						sumGreen = sumGreen;
+						sumRed = sumRed;
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if(RGB2GRAY(newcolor.rgbRed,newcolor.rgbGreen, newcolor.rgbBlue)>128){
+							newcolor.rgbBlue = 0;
+							newcolor.rgbGreen = 0;
+							newcolor.rgbRed = 255;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+						
+					}
+				}
+			}
+			else if (dwWindowSize == 2) {
+				float mask[3][3] = { { -1, 0, 1 },
+				{ -2, 0, 2 },
+				{ -1, 0, 1 } };
+
+				int sumRed = 0;
+				int sumGreen = 0;
+				int sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask[x - xsize][y - ysize];
+							}
+						}
+
+						sumBlue = sumBlue;
+						sumGreen = sumGreen;
+						sumRed = sumRed;
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 255;
+							newcolor.rgbGreen = 0;
+							newcolor.rgbRed = 0;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+					}
+				}
+
+			}
+			else if (dwWindowSize == 3) {
+				float mask[3][3] = { { 0, 1, 2 },
+				{ -1, 0, 1 },
+				{ -2, -1, 0 } };
+
+				int sumRed = 0;
+				int sumGreen = 0;
+				int sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask[x - xsize][y - ysize];
+							}
+						}
+
+						sumBlue = sumBlue;
+						sumGreen = sumGreen;
+						sumRed = sumRed;
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 0;
+							newcolor.rgbGreen = 255;
+							newcolor.rgbRed = 0;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+					}
+				}
+
+			}
+			else if (dwWindowSize == 4) {
+				float mask[3][3] = { { -2, -1, 0 },
+				{ -1, 0, 1 },
+				{ 0, 1, 2 } };
+				int sumRed = 0;
+				int sumGreen = 0;
+				int sumBlue = 0;
+
+				for (int xsize = 0; xsize < width - 2; xsize++) {
+					for (int ysize = 0; ysize < height - 2; ysize++) {
+						sumRed = 0;		
+						sumGreen = 0;
+						sumBlue = 0;
+						for (int x = xsize; x < (xsize + 3); x++) {
+							for (int y = ysize; y < (ysize + 3); y++) {
+								color = m_pImage->GetPixelColor(x, y);
+								sumBlue += color.rgbBlue * mask[x - xsize][y - ysize];
+								sumRed += color.rgbRed * mask[x - xsize][y - ysize];
+								sumGreen += color.rgbGreen * mask[x - xsize][y - ysize];
+							}
+						}
+
+						sumBlue = sumBlue;
+						sumGreen = sumGreen;
+						sumRed = sumRed;
+
+						if (sumBlue < 0) {
+							sumBlue = 0;
+						}
+
+						if (sumGreen < 0) {
+							sumGreen = 0;
+						}
+
+						if (sumRed < 0) {
+							sumRed = 0;
+						}
+
+						if (sumBlue >255) {
+							sumBlue = 255;
+						}
+						if (sumGreen >255) {
+							sumGreen = 255;
+						}
+						if (sumRed >255) {
+							sumRed = 255;
+						}
+						newcolor.rgbBlue = (BYTE)sumBlue;
+						newcolor.rgbRed = (BYTE)sumRed;
+						newcolor.rgbGreen = (BYTE)sumGreen;
+
+						buffer->SetPixelColor(xsize + 1, ysize + 1, newcolor);
+					}
+				}
+
+				for (int xsize = 1; xsize < width - 1; xsize++) {
+					for (int ysize = 1; ysize < height - 1; ysize++) {
+						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+							newcolor.rgbBlue = 0;
+							newcolor.rgbGreen = 255;
+							newcolor.rgbRed = 255;
+							m_pImage->SetPixelColor(xsize, ysize, newcolor);
+						}
+					}
+				}
+
+			}
+			
+			/*
 			if (dwWindowSize == 0){
 				//Blurring
 				float mask[3][3] = { { 1, 1, 1 },
@@ -542,10 +1090,10 @@ void CImageProcessingDoc::OnProcessMosaic()
 			}
 	
 		
+	*/
 	}
 			
 	}
-
 	CalculateHistogram();
 	UpdateAllViews(NULL);
 }
