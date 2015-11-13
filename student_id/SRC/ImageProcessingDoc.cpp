@@ -365,15 +365,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -395,7 +395,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 0;
 							newcolor.rgbGreen = 0;
 							newcolor.rgbRed = 255;
@@ -430,15 +430,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -461,7 +461,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 255;
 							newcolor.rgbGreen = 0;
 							newcolor.rgbRed = 0;
@@ -494,15 +494,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -525,7 +525,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 0;
 							newcolor.rgbGreen = 255;
 							newcolor.rgbRed = 0;
@@ -556,15 +556,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 							}
 						}
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -587,7 +587,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 0;
 							newcolor.rgbGreen = 255;
 							newcolor.rgbRed = 255;
@@ -626,15 +626,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 						sumRed = sumRed;
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -656,7 +656,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if(RGB2GRAY(newcolor.rgbRed,newcolor.rgbGreen, newcolor.rgbBlue)>128){
+						if(RGB2GRAY(newcolor.rgbRed,newcolor.rgbGreen, newcolor.rgbBlue)>150){
 							newcolor.rgbBlue = 0;
 							newcolor.rgbGreen = 0;
 							newcolor.rgbRed = 255;
@@ -694,15 +694,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 						sumRed = sumRed;
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -725,7 +725,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 255;
 							newcolor.rgbGreen = 0;
 							newcolor.rgbRed = 0;
@@ -763,15 +763,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 						sumRed = sumRed;
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -794,7 +794,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 0;
 							newcolor.rgbGreen = 255;
 							newcolor.rgbRed = 0;
@@ -831,15 +831,15 @@ void CImageProcessingDoc::OnProcessMosaic()
 						sumRed = sumRed;
 
 						if (sumBlue < 0) {
-							sumBlue = 0;
+							sumBlue = -sumBlue;
 						}
 
 						if (sumGreen < 0) {
-							sumGreen = 0;
+							sumGreen = -sumGreen;
 						}
 
 						if (sumRed < 0) {
-							sumRed = 0;
+							sumRed = -sumRed;
 						}
 
 						if (sumBlue >255) {
@@ -862,7 +862,7 @@ void CImageProcessingDoc::OnProcessMosaic()
 				for (int xsize = 1; xsize < width - 1; xsize++) {
 					for (int ysize = 1; ysize < height - 1; ysize++) {
 						newcolor = buffer->GetPixelColor(xsize + 1, ysize + 1);
-						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>128) {
+						if (RGB2GRAY(newcolor.rgbRed, newcolor.rgbGreen, newcolor.rgbBlue)>150) {
 							newcolor.rgbBlue = 0;
 							newcolor.rgbGreen = 255;
 							newcolor.rgbRed = 255;
